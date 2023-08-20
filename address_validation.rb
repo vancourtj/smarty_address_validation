@@ -25,7 +25,7 @@ module AddressValidation
       address_information = SmartyAddressService.new(address).call
 
       printable_addresses << AddressFormatService.new(address_information[:original_address],
-                                                         address_information[:validated_address]).call
+                                                      address_information[:validated_address]).call
     end
 
     printable_addresses.each do |address|
