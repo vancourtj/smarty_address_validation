@@ -131,3 +131,11 @@ for ease of implementation and maintainability. The integration is wrapped in an
 
 The adapter acts as the interface for the codebase to isolate the client and transforms address data into
 the sdk preferred format. The client handles building the sdk client and sending the request.
+
+## Future Considerations
+
+- Investigate batching the Smarty API requests. The script as is may have poor performance for large data files
+due to sending a request for each address.
+- Implement graceful error handling (or any error handling)
+- Investigate strategies for enforcing the `SmartyAdapter` as the only public facing integration component.
+Maybe something like [packwerk](https://github.com/Shopify/packwerk).
