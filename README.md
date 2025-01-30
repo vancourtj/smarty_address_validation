@@ -24,7 +24,7 @@ If you do not have rbenv installed, follow these [instructions](https://github.c
 
 #### Ruby
 
-This project was written in Ruby [3.1.4](https://www.ruby-lang.org/en/news/2023/03/30/ruby-3-1-4-released/).
+This project was written in Ruby [3.1.6](https://www.ruby-lang.org/en/news/2024/05/29/ruby-3-1-6-released/).
 
 You can check your Ruby installation:
 
@@ -35,8 +35,8 @@ ruby -v
 If you do not have ruby or the correct version installed:
 
 ```bash
-rbenv install 3.1.4
-rbenv local 3.1.4
+rbenv install 3.1.6
+rbenv local 3.1.6
 ```
 
 #### Bundler
@@ -88,21 +88,20 @@ bundle exec rspec
 You can also run individual spec files from the project directory. For example:
 
 ```bash
-bundle exec rspec spec/services/smarty_address_service_spec.rb
+bundle exec rspec spec/models/address_spec.rb
 ```
 
 ## Design Choices
 
 ### Assumptions
+
 - the input csv file shape and data do not need validated
 - only the first Smarty result candidate matters, we don't need to ask for or care about additional candidates
+- error handling is out of scope
 
 ### Script
 
-The script file interacts with the command line (takes in arguments and prints to terminal)
-and loads the environment variables early in code execution. All other responsibilities get handed
-off to different services. This provides a command-line program for the script and allows for the
-Smarty integration code to be easily reusable and extendable.
+The script file acts mostly as an orchestrator: loads the environment variables early in code execution, loops through the csv file, and loops through the addresses to print them. The script hands off core responsibilities and business logic to different services and classes. The separation of concerns allows for easy extension of the code.
 
 ### Services
 
@@ -110,19 +109,15 @@ Smarty integration code to be easily reusable and extendable.
 
 This service provides a testable interface for retrieving the cli file name argument.
 
-#### Smarty Address
+### Classes
 
-This service uses the `SmartyAdapter` to retrieve the Smarty validated address.
-It then formats the original and validated addresses for downstream consumption.
+#### Address
 
-It can easily be extended and used without worrying about the
-specific implementation of the Smarty integration. The service only needs to concern
-itself with the original address and the API response shape.
+The class provides an extendable, testable interface for operations that include or should live at a level above either the input data and the validated address. Instead of calling the Smarty API in the csv parsing loop, that occurs at instantiation of the Address class.
 
-#### Address Format
+#### Candidate
 
-This removes string formatting responsibility from the script and puts it into a flexible,
-testable service. There is logic for what to use when there is not a valid address.
+The class acts as a convenient wrapper for the complex `SmartyStreets::USStreet::Candidate` class and provides useful methods that are only concerned with the Smarty API response candidate.
 
 ### Smarty Integration
 
@@ -134,8 +129,6 @@ the sdk preferred format. The client handles building the sdk client and sending
 
 ## Future Considerations
 
-- Investigate batching the Smarty API requests. The script as is may have poor performance for large data files
-due to sending a request for each address.
-- Implement graceful error handling (or any error handling)
-- Investigate strategies for enforcing the `SmartyAdapter` as the only public facing integration component.
-Maybe something like [packwerk](https://github.com/Shopify/packwerk).
+- Investigate batching the Smarty API requests to improve performance for large datasets
+- Implement graceful error handling
+- Implement a caching or deduplicating mechanism to prevent redundant Smarty API requests

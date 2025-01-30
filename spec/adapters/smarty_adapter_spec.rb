@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe SmartyAdapter do
-  describe '#get_us_street_address_result' do
+  describe '#validate_us_street_address' do
     let(:address) do
       {
         street: '123 Main St',
@@ -11,13 +13,13 @@ RSpec.describe SmartyAdapter do
     end
 
     before do
-      allow_any_instance_of(SmartyClient).to receive(:get_us_street_address_candidates).and_return(['1', '2'])
+      allow_any_instance_of(SmartyClient).to receive(:get_us_street_address_candidates).and_return(%w[1 2])
     end
 
     subject { described_class.new(address) }
 
     it 'returns the first object from the SmartyClient result' do
-      expect(subject.get_us_street_address_result).to eq('1')
+      expect(subject.validate_us_street_address).to eq('1')
     end
 
     it 'builds the lookup using the supplied address' do
@@ -27,7 +29,7 @@ RSpec.describe SmartyAdapter do
       expect(lookup.city).to be_nil
       expect(lookup.zipcode).to be_nil
 
-      subject.get_us_street_address_result
+      subject.validate_us_street_address
 
       expect(lookup.street).to eq(address[:street])
       expect(lookup.city).to eq(address[:city])

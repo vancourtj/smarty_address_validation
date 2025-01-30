@@ -2,7 +2,6 @@
 
 # @see https://github.com/smartystreets/smartystreets-ruby-sdk/tree/master
 require 'smartystreets_ruby_sdk'
-
 require './clients/smarty_client'
 
 class SmartyAdapter
@@ -14,7 +13,7 @@ class SmartyAdapter
   # Adapts the address data into the correct shape for Smarty and calls the {SmartyClient}
   #
   # @return [SmartyStreets::USStreet::Candidate] the Smarty address verification result
-  def get_us_street_address_result
+  def validate_us_street_address
     build_lookup
 
     candidates = SmartyClient.new(@lookup).get_us_street_address_candidates

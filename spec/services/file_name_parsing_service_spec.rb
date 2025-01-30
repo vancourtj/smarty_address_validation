@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 RSpec.describe FileNameParsingService do
@@ -11,7 +13,7 @@ RSpec.describe FileNameParsingService do
     end
 
     context 'when the command line arguments are formatted correctly' do
-      let(:argv) { %W(--csv_file_name #{file_name}) }
+      let(:argv) { %W[--csv_file_name #{file_name}] }
 
       it 'returns the file name' do
         expect(subject).to eq(file_name)
@@ -19,7 +21,7 @@ RSpec.describe FileNameParsingService do
     end
 
     context 'when the command line argument has too many arguments' do
-      let(:argv) { %W(--csv_file_name #{file_name} --another_arg AAA) }
+      let(:argv) { %W[--csv_file_name #{file_name} --another_arg AAA] }
 
       it 'raises an invalid option error' do
         expect { subject }.to raise_error(OptionParser::InvalidOption)
@@ -27,7 +29,7 @@ RSpec.describe FileNameParsingService do
     end
 
     context 'when the command line argument has the incorrect argument' do
-      let(:argv) { %W(--aaa_file_name #{file_name}) }
+      let(:argv) { %W[--aaa_file_name #{file_name}] }
 
       it 'raises an invalid option error' do
         expect { subject }.to raise_error(OptionParser::InvalidOption)
