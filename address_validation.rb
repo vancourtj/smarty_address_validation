@@ -4,7 +4,7 @@
 
 ##
 # USAGE:
-# bundle exec ruby address_validation.rb --csv_file_name file.csv
+# bundle exec ruby address_validation.rb --csv_file_name spec/fixtures/sample_data.csv
 ##
 
 require 'dotenv'
@@ -13,6 +13,7 @@ require 'csv'
 Dotenv.load
 
 require './models/address'
+require './services/file_name_parsing_service'
 
 module AddressValidation
   def self.call
