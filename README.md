@@ -91,7 +91,7 @@ You can also run individual spec files from the project directory. For example:
 bundle exec rspec spec/models/address_spec.rb
 ```
 
-## Design Choices
+## Architecture Choices
 
 ### Assumptions
 
@@ -109,7 +109,7 @@ The script file acts mostly as an orchestrator: loads the environment variables 
 
 This service provides a testable interface for retrieving the cli file name argument.
 
-### Classes
+### Models
 
 #### Address
 
